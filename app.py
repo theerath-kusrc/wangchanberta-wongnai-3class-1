@@ -12,10 +12,14 @@ app = Flask(__name__)
 line_bot_api = LineBotApi(os.getenv('LINE_CHANNEL_ACCESS_TOKEN'))
 handler = WebhookHandler('3ff9ebb61e1dabaced81d4ab6cb05f76') # Channel Secret ของคุณ
 
-# โหลดโมเดล WangchanBERTa
+from transformers import CamembertConfig, CamembertForSequenceClassification, CamembertTokenizer
+
 model_name = "Kanyasiri/wangchanberta-wongnai-3class"
-tokenizer = CamembertTokenizer.from_pretrained(model_name)
+
+# Load specifically as Camembert
+config = CamembertConfig.from_pretrained(model_name)
 model = CamembertForSequenceClassification.from_pretrained(model_name)
+tokenizer = CamembertTokenizer.from_pretrained(model_name)
 
 @app.route("/callback", methods=['POST'])
 def callback():
@@ -47,4 +51,5 @@ def handle_message(event):
     )
 
 if __name__ == "__main__":
+
     app.run()
